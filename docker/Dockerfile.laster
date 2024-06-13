@@ -120,7 +120,7 @@ COPY root/requirements.txt /requirements.txt
 # Créer et activer un environnement virtuel pour installer les dépendances Python
 RUN python3 -m venv /opt/venv
 RUN /opt/venv/bin/pip install --upgrade pip
-RUN /opt/venv/bin/pip install -r /requirements.txt
+RUN /opt/venv/bin/pip install -r /root/requirements.txt
 
 # Définir le chemin de l'environnement virtuel
 ENV PATH="/opt/venv/bin:$PATH"
