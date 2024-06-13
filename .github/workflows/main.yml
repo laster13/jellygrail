@@ -33,3 +33,13 @@ jobs:
     - name: Push changes
       run: |
         git push origin main
+
+    - name: Log in to GitHub Container Registry
+      run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/laster13/jellygrail:latest
