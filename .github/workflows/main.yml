@@ -40,7 +40,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
-        context: laster/
-        dockerfile: laster/Dockerfile
+        context: docker/
+        dockerfile: docker/Dockerfile.laster
         push: true
         tags: ghcr.io/laster13/jellygrail:latest
