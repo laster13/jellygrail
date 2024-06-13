@@ -1,9 +1,9 @@
-name: Sync Fork
+name: Sync Fork and Build Docker Image
 
 on:
   schedule:
-    - cron: '0 0 * * *' # This runs the workflow every day at midnight UTC
-  workflow_dispatch:
+    - cron: '0 0 * * *' # Ce workflow s'exécute chaque jour à minuit UTC
+  workflow_dispatch: # Permet le déclenchement manuel
 
 jobs:
   sync:
@@ -13,9 +13,9 @@ jobs:
     - name: Checkout the repo
       uses: actions/checkout@v2
       with:
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        
+        repository: ${{ github.repository }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Set up Git configuration
       run: |
         git config --global user.email "laster13012@gmail.com"
@@ -27,6 +27,19 @@ jobs:
     - name: Fetch upstream
       run: git fetch upstream
 
+    - name: Merge upstream changes
+      run: git merge upstream/main --allow-unrelated-histories
+
+    - name: Ensure .gitattributes is set
+      run: |
+        echo "Dockerfile merge=ours" > .gitattributes
+        git add .gitattributes
+        git commit -m "Ensure .gitattributes to protect Dockerfile from merges" || echo "No changes to commit"
+
+    - name: Push changes
+      run: |
+        git push origin main # Assurez-vous que la branche est correcte
+
     - name: Log in to GitHub Container Registry
       run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
 
@@ -35,4 +48,4 @@ jobs:
       with:
         context: docker/
         push: true
-        tags: ghcr.io/laster13/jellygrail:latest
+        tags: ghcr.io/laster13/jellygrail:latest # Remplacez par votre nom d'utilisateur GitHub et le nom de l'image
