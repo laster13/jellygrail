@@ -2,17 +2,15 @@ FROM ubuntu AS builder
 
 # RUN apt update && apt install golang libfuse
 RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		g++ \
-        	golang \
-        	libfuse-dev \
-		gcc \
-		libc6-dev \
-		make \
-		pkg-config
-
-
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        g++ \
+        golang \
+        libfuse-dev \
+        gcc \
+        libc6-dev \
+        make \
+        pkg-config
 
 RUN apt-get update && apt-get install git -y
 
@@ -47,7 +45,7 @@ RUN apt-get update && \
     apt-get -y install xz-utils
 
 # RUN apt-get -y install bindfs && \
-RUN apt-get -y install python3 python3-pip
+RUN apt-get -y install python3 python3-pip python3-venv
 
 # RAR2FS build
 RUN WORKDIR=`mktemp -d` && \
@@ -93,7 +91,6 @@ RUN cd /tmp && \
     # chmod ugo+rx ./h2static && \
     # mv ./h2static /usr/bin/
 
-
 # add rclone fork
 # RUN cd /usr/bin && \
     # wget https://github.com/itsToggle/rclone_RD/releases/download/v1.58.1-rd.2.2/rclone-linux
@@ -119,7 +116,14 @@ RUN cd /mounts/kodi/software && wget https://abratchik.github.io/kodi.repository
 # copy conf and s6 scripts from repo
 # COPY rclone.conf /root/.config/rclone/
 COPY root/requirements.txt /requirements.txt
-RUN python3 -m pip install -r requirements.txt
+
+# Créer et activer un environnement virtuel pour installer les dépendances Python
+RUN python3 -m venv /opt/venv
+RUN /opt/venv/bin/pip install --upgrade pip
+RUN /opt/venv/bin/pip install -r /root/requirements.txt
+
+# Définir le chemin de l'environnement virtuel
+ENV PATH="/opt/venv/bin:$PATH"
 
 # nginx
 RUN apt-get -y install nginx nginx-extras unzip
@@ -178,4 +182,3 @@ EXPOSE 6502
 ENTRYPOINT ["/init"]
 # CMD ["/bin/bash"]
 CMD ["python3", "/usr/local/bin/grail_jelly/main.py"]
-
