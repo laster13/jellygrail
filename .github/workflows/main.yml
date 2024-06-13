@@ -27,9 +27,6 @@ jobs:
     - name: Fetch upstream
       run: git fetch upstream
 
-    - name: Merge upstream changes
-      run: git merge upstream/main --allow-unrelated-histories
-
     - name: Log in to GitHub Container Registry
       run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
 
