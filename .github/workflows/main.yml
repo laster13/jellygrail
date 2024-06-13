@@ -13,8 +13,8 @@ jobs:
     - name: Checkout the repo
       uses: actions/checkout@v2
       with:
-        repository: 'votre_nom_utilisateur/votre_fork' # Remplacez par votre nom d'utilisateur GitHub et le nom de votre fork
-        token: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Add upstream remote
       run: git remote add upstream https://github.com/nom_utilisateur/original_repo.git # Remplacez par l'URL du dépôt original
@@ -23,8 +23,8 @@ jobs:
       run: git fetch upstream
 
     - name: Merge upstream changes
-      run: git merge upstream/main # Assurez-vous que la branche est correcte
+      run: git merge upstream/main
 
     - name: Push changes
       run: |
-        git push origin main # Assurez-vous que la branche est correcte
+        git push origin main
