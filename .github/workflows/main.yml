@@ -17,7 +17,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Add upstream remote
-      run: git remote add upstream https://github.com/nom_utilisateur/original_repo.git # Remplacez par l'URL du dépôt original
+      run: git remote add upstream https://github.com/philamp/jellygrail.git
 
     - name: Fetch upstream
       run: git fetch upstream
